@@ -32,6 +32,7 @@ func ToHTML(s string) string {
 		p = highlightRegexp.ReplaceAllString(p, "<mark>$1</mark>")
 
 		p = strings.ReplaceAll(p, "\n", "<br />")
+		p = strings.ReplaceAll(p, "\u2028", "<br />")
 
 		buf.WriteString("<p>")
 		buf.WriteString(p)

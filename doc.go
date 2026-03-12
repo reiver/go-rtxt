@@ -9,7 +9,7 @@ It supports the following inline formatting:
 	||highlight||  → <mark>highlight</mark>
 
 Paragraphs are separated by blank lines (double newline) or the Unicode paragraph separator (U+2029).
-Single newlines within a paragraph become <br /> tags.
+Single newlines and Unicode line separators (U+2028) within a paragraph become <br /> tags.
 HTML special characters are escaped.
 
 	input := "Hello **world**\n\nSecond paragraph"

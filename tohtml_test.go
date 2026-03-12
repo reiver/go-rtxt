@@ -86,6 +86,13 @@ func TestToHTML(t *testing.T) {
 			Expected: "<p>Line one<br />Line two</p><p>New paragraph</p>",
 		},
 
+		// U+2028 line separator
+		{
+			Name:     "U+2028 line separator",
+			Input:    "Line one\u2028Line two",
+			Expected: "<p>Line one<br />Line two</p>",
+		},
+
 		// U+2029 paragraph separator
 		{
 			Name:     "U+2029 paragraph separator",
