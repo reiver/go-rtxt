@@ -86,6 +86,28 @@ func TestToHTML(t *testing.T) {
 			Expected: "<p>Line one<br />Line two</p><p>New paragraph</p>",
 		},
 
+		// links
+		{
+			Name:     "link",
+			Input:    "[[https://example.com]]",
+			Expected: `<p><a href="https://example.com">https://example.com</a></p>`,
+		},
+		{
+			Name:     "link in sentence",
+			Input:    "Visit [[https://example.com]] for more info",
+			Expected: `<p>Visit <a href="https://example.com">https://example.com</a> for more info</p>`,
+		},
+		{
+			Name:     "link with query parameters",
+			Input:    "[[https://example.com/search?q=hello&lang=en]]",
+			Expected: `<p><a href="https://example.com/search?q=hello&amp;lang=en">https://example.com/search?q=hello&amp;lang=en</a></p>`,
+		},
+		{
+			Name:     "bold and link",
+			Input:    "**bold** and [[https://example.com]]",
+			Expected: `<p><strong>bold</strong> and <a href="https://example.com">https://example.com</a></p>`,
+		},
+
 		// U+0085 next line
 		{
 			Name:     "U+0085 next line",

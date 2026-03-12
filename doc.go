@@ -7,6 +7,7 @@ It supports the following inline formatting:
 	//italic//     → <em>italic</em>
 	__underline__  → <u>underline</u>
 	||highlight||  → <mark>highlight</mark>
+	[[url]]        → <a href="url">url</a>
 
 Paragraphs are separated by blank lines (double newline) or the Unicode paragraph separator (U+2029).
 Single newlines, next-line characters (U+0085), and Unicode line separators (U+2028) within a paragraph become <br /> tags.

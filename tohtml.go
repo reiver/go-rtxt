@@ -13,6 +13,7 @@ var (
 	italicRegexp    = regexp.MustCompile(`//(.+?)//`)
 	underlineRegexp = regexp.MustCompile(`__(.+?)__`)
 	highlightRegexp = regexp.MustCompile(`\|\|(.+?)\|\|`)
+	linkRegexp      = regexp.MustCompile(`\[\[(.+?)\]\]`)
 )
 
 func ToHTML(s string) string {
@@ -30,6 +31,7 @@ func ToHTML(s string) string {
 		p = italicRegexp.ReplaceAllString(p, "<em>$1</em>")
 		p = underlineRegexp.ReplaceAllString(p, "<u>$1</u>")
 		p = highlightRegexp.ReplaceAllString(p, "<mark>$1</mark>")
+		p = linkRegexp.ReplaceAllString(p, `<a href="$1">$1</a>`)
 
 		p = strings.ReplaceAll(p, "\n", "<br />")
 		p = strings.ReplaceAll(p, "\u2028", "<br />")
