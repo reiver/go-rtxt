@@ -6,178 +6,185 @@ import (
 
 func TestToHTML(t *testing.T) {
 	tests := []struct {
-		name   string
-		input  string
-		expect string
+		Name     string
+		Input    string
+		Expected string
 	}{
 		{
-			name:   "empty string",
-			input:  "",
-			expect: "",
+			Name:     "empty string",
+			Input:    "",
+			Expected: "",
 		},
 		{
-			name:   "plain text",
-			input:  "Hello world",
-			expect: "<p>Hello world</p>",
+			Name:     "plain text",
+			Input:    "Hello world",
+			Expected: "<p>Hello world</p>",
 		},
 		{
-			name:   "two paragraphs",
-			input:  "First paragraph\n\nSecond paragraph",
-			expect: "<p>First paragraph</p><p>Second paragraph</p>",
+			Name:     "two paragraphs",
+			Input:    "First paragraph\n\nSecond paragraph",
+			Expected: "<p>First paragraph</p><p>Second paragraph</p>",
 		},
 		{
-			name:   "paragraphs separated by whitespace between newlines",
-			input:  "First paragraph\n \t\nSecond paragraph",
-			expect: "<p>First paragraph</p><p>Second paragraph</p>",
+			Name:     "paragraphs separated by whitespace between newlines",
+			Input:    "First paragraph\n \t\nSecond paragraph",
+			Expected: "<p>First paragraph</p><p>Second paragraph</p>",
 		},
 		{
-			name:   "bold",
-			input:  "**bold**",
-			expect: "<p><strong>bold</strong></p>",
+			Name:     "bold",
+			Input:    "**bold**",
+			Expected: "<p><strong>bold</strong></p>",
 		},
 		{
-			name:   "italic",
-			input:  "//italic//",
-			expect: "<p><em>italic</em></p>",
+			Name:     "italic",
+			Input:    "//italic//",
+			Expected: "<p><em>italic</em></p>",
 		},
 		{
-			name:   "underline",
-			input:  "__underline__",
-			expect: "<p><u>underline</u></p>",
+			Name:     "underline",
+			Input:    "__underline__",
+			Expected: "<p><u>underline</u></p>",
 		},
 		{
-			name:   "highlight",
-			input:  "||highlight||",
-			expect: "<p><mark>highlight</mark></p>",
+			Name:     "highlight",
+			Input:    "||highlight||",
+			Expected: "<p><mark>highlight</mark></p>",
 		},
 		{
-			name:   "mixed formatting in one paragraph",
-			input:  "This is **bold** and //italic// and __underlined__ and ||highlighted||",
-			expect: "<p>This is <strong>bold</strong> and <em>italic</em> and <u>underlined</u> and <mark>highlighted</mark></p>",
+			Name:     "mixed formatting in one paragraph",
+			Input:    "This is **bold** and //italic// and __underlined__ and ||highlighted||",
+			Expected: "<p>This is <strong>bold</strong> and <em>italic</em> and <u>underlined</u> and <mark>highlighted</mark></p>",
 		},
 		{
-			name:   "single newline within paragraph becomes br",
-			input:  "Line one\nLine two",
-			expect: "<p>Line one<br>Line two</p>",
+			Name:     "single newline within paragraph becomes br",
+			Input:    "Line one\nLine two",
+			Expected: "<p>Line one<br>Line two</p>",
 		},
 		{
-			name:   "HTML special chars escaped",
-			input:  "<script>alert('xss')</script>",
-			expect: "<p>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</p>",
+			Name:     "HTML special chars escaped",
+			Input:    "<script>alert('xss')</script>",
+			Expected: "<p>&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;</p>",
 		},
 		{
-			name:   "ampersand escaped",
-			input:  "AT&T",
-			expect: "<p>AT&amp;T</p>",
+			Name:     "ampersand escaped",
+			Input:    "AT&T",
+			Expected: "<p>AT&amp;T</p>",
 		},
 		{
-			name:   "three paragraphs",
-			input:  "One\n\nTwo\n\nThree",
-			expect: "<p>One</p><p>Two</p><p>Three</p>",
+			Name:     "three paragraphs",
+			Input:    "One\n\nTwo\n\nThree",
+			Expected: "<p>One</p><p>Two</p><p>Three</p>",
 		},
 		{
-			name:   "formatting across multiple paragraphs",
-			input:  "**bold text**\n\n//italic text//",
-			expect: "<p><strong>bold text</strong></p><p><em>italic text</em></p>",
+			Name:     "formatting across multiple paragraphs",
+			Input:    "**bold text**\n\n//italic text//",
+			Expected: "<p><strong>bold text</strong></p><p><em>italic text</em></p>",
 		},
 		{
-			name:   "single newline and double newline mixed",
-			input:  "Line one\nLine two\n\nNew paragraph",
-			expect: "<p>Line one<br>Line two</p><p>New paragraph</p>",
+			Name:     "single newline and double newline mixed",
+			Input:    "Line one\nLine two\n\nNew paragraph",
+			Expected: "<p>Line one<br>Line two</p><p>New paragraph</p>",
 		},
 
 		// Persian numbers
 		{
-			name:   "persian digits",
-			input:  "۰۱۲۳۴۵۶۷۸۹",
-			expect: "<p>۰۱۲۳۴۵۶۷۸۹</p>",
+			Name:     "persian digits",
+			Input:    "۰۱۲۳۴۵۶۷۸۹",
+			Expected: "<p>۰۱۲۳۴۵۶۷۸۹</p>",
 		},
 		{
-			name:   "persian number in sentence",
-			input:  "قیمت ۱۲۳ تومان است",
-			expect: "<p>قیمت ۱۲۳ تومان است</p>",
+			Name:     "persian number in sentence",
+			Input:    "قیمت ۱۲۳ تومان است",
+			Expected: "<p>قیمت ۱۲۳ تومان است</p>",
 		},
 		{
-			name:   "bold persian number",
-			input:  "**۴۲**",
-			expect: "<p><strong>۴۲</strong></p>",
+			Name:     "bold persian number",
+			Input:    "**۴۲**",
+			Expected: "<p><strong>۴۲</strong></p>",
 		},
 		{
-			name:   "persian numbers in two paragraphs",
-			input:  "شماره ۱\n\nشماره ۲",
-			expect: "<p>شماره ۱</p><p>شماره ۲</p>",
+			Name:     "persian numbers in two paragraphs",
+			Input:    "شماره ۱\n\nشماره ۲",
+			Expected: "<p>شماره ۱</p><p>شماره ۲</p>",
 		},
 
 		// Persian words
 		{
-			name:   "persian dorood",
-			input:  "درود",
-			expect: "<p>درود</p>",
+			Name:     "persian dorood",
+			Input:    "درود",
+			Expected: "<p>درود</p>",
 		},
 		{
-			name:   "persian dorood bold",
-			input:  "**درود**",
-			expect: "<p><strong>درود</strong></p>",
+			Name:     "persian dorood bold",
+			Input:    "**درود**",
+			Expected: "<p><strong>درود</strong></p>",
 		},
 		{
-			name:   "persian sentence",
-			input:  "درود بر شما",
-			expect: "<p>درود بر شما</p>",
+			Name:     "persian sentence",
+			Input:    "درود بر شما",
+			Expected: "<p>درود بر شما</p>",
 		},
 		{
-			name:   "persian sentence with formatting",
-			input:  "درود **دوست** //عزیز//",
-			expect: "<p>درود <strong>دوست</strong> <em>عزیز</em></p>",
+			Name:     "persian sentence with formatting",
+			Input:    "درود **دوست** //عزیز//",
+			Expected: "<p>درود <strong>دوست</strong> <em>عزیز</em></p>",
 		},
 		{
-			name:   "persian two paragraphs",
-			input:  "درود بر شما\n\nخوش آمدید",
-			expect: "<p>درود بر شما</p><p>خوش آمدید</p>",
+			Name:     "persian two paragraphs",
+			Input:    "درود بر شما\n\nخوش آمدید",
+			Expected: "<p>درود بر شما</p><p>خوش آمدید</p>",
 		},
 		{
-			name:   "persian with line break",
-			input:  "درود\nخداحافظ",
-			expect: "<p>درود<br>خداحافظ</p>",
+			Name:     "persian with line break",
+			Input:    "درود\nخداحافظ",
+			Expected: "<p>درود<br>خداحافظ</p>",
 		},
 
 		// Korean words
 		{
-			name:   "korean plain text",
-			input:  "안녕하세요",
-			expect: "<p>안녕하세요</p>",
+			Name:     "korean plain text",
+			Input:    "안녕하세요",
+			Expected: "<p>안녕하세요</p>",
 		},
 		{
-			name:   "korean bold",
-			input:  "**안녕하세요**",
-			expect: "<p><strong>안녕하세요</strong></p>",
+			Name:     "korean bold",
+			Input:    "**안녕하세요**",
+			Expected: "<p><strong>안녕하세요</strong></p>",
 		},
 		{
-			name:   "korean sentence with formatting",
-			input:  "이것은 **굵은** 글씨와 //기울임// 글씨입니다",
-			expect: "<p>이것은 <strong>굵은</strong> 글씨와 <em>기울임</em> 글씨입니다</p>",
+			Name:     "korean sentence with formatting",
+			Input:    "이것은 **굵은** 글씨와 //기울임// 글씨입니다",
+			Expected: "<p>이것은 <strong>굵은</strong> 글씨와 <em>기울임</em> 글씨입니다</p>",
 		},
 		{
-			name:   "korean two paragraphs",
-			input:  "첫 번째 단락\n\n두 번째 단락",
-			expect: "<p>첫 번째 단락</p><p>두 번째 단락</p>",
+			Name:     "korean two paragraphs",
+			Input:    "첫 번째 단락\n\n두 번째 단락",
+			Expected: "<p>첫 번째 단락</p><p>두 번째 단락</p>",
 		},
 		{
-			name:   "korean with line break",
-			input:  "안녕하세요\n감사합니다",
-			expect: "<p>안녕하세요<br>감사합니다</p>",
+			Name:     "korean with line break",
+			Input:    "안녕하세요\n감사합니다",
+			Expected: "<p>안녕하세요<br>감사합니다</p>",
 		},
 		{
-			name:   "korean with highlight",
-			input:  "||중요한|| 내용",
-			expect: "<p><mark>중요한</mark> 내용</p>",
+			Name:     "korean with highlight",
+			Input:    "||중요한|| 내용",
+			Expected: "<p><mark>중요한</mark> 내용</p>",
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := ToHTML(tt.input)
-			if got != tt.expect {
-				t.Errorf("ToHTML(%q)\n got: %q\nwant: %q", tt.input, got, tt.expect)
+	for testNumber, test := range tests {
+		t.Run(test.Name, func(t *testing.T) {
+			actual := ToHTML(test.Input)
+
+			expected := test.Expected
+
+			if expected != actual {
+				t.Errorf("For test #%d, the actual HTML from rtxt is not what was expected.", testNumber)
+				t.Logf("EXPECTED: %q", expected)
+				t.Logf("ACTUAL:   %q", actual)
+				t.Logf("INPUT:    %q", test.Input)
+				return
 			}
 		})
 	}
