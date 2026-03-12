@@ -91,6 +91,43 @@ func TestToHTML(t *testing.T) {
 			Expected: "<p>Line one<br />Line two</p><p>New paragraph</p>",
 		},
 
+		// unordered lists
+		{
+			Name:     "single list item",
+			Input:    "\t\u2022 apples",
+			Expected: "<ul><li>apples</li></ul>",
+		},
+		{
+			Name:     "multiple list items",
+			Input:    "\t\u2022 apples\n\t\u2022 bananas\n\t\u2022 cherries",
+			Expected: "<ul><li>apples</li><li>bananas</li><li>cherries</li></ul>",
+		},
+		{
+			Name:     "list item with continuation line",
+			Input:    "\t\u2022 first item\n\tcontinues here\n\t\u2022 second item",
+			Expected: "<ul><li>first item<br />continues here</li><li>second item</li></ul>",
+		},
+		{
+			Name:     "list continuation only strips one leading tab",
+			Input:    "\t\u2022 item\n\t\textra indented",
+			Expected: "<ul><li>item<br />\textra indented</li></ul>",
+		},
+		{
+			Name:     "list with bold item",
+			Input:    "\t\u2022 **bold item**\n\t\u2022 normal item",
+			Expected: "<ul><li><strong>bold item</strong></li><li>normal item</li></ul>",
+		},
+		{
+			Name:     "list followed by paragraph",
+			Input:    "\t\u2022 apples\n\t\u2022 bananas\n\nSome text",
+			Expected: "<ul><li>apples</li><li>bananas</li></ul><p>Some text</p>",
+		},
+		{
+			Name:     "paragraph followed by list",
+			Input:    "Some text\n\n\t\u2022 apples\n\t\u2022 bananas",
+			Expected: "<p>Some text</p><ul><li>apples</li><li>bananas</li></ul>",
+		},
+
 		// links
 		{
 			Name:     "link",
