@@ -31,7 +31,7 @@ func ToHTML(s string) string {
 		p = underlineRegexp.ReplaceAllString(p, "<u>$1</u>")
 		p = highlightRegexp.ReplaceAllString(p, "<mark>$1</mark>")
 
-		p = strings.ReplaceAll(p, "\n", "<br>")
+		p = strings.ReplaceAll(p, "\n", "<br />")
 
 		buf.WriteString("<p>")
 		buf.WriteString(p)

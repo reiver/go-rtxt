@@ -58,7 +58,7 @@ func TestToHTML(t *testing.T) {
 		{
 			Name:     "single newline within paragraph becomes br",
 			Input:    "Line one\nLine two",
-			Expected: "<p>Line one<br>Line two</p>",
+			Expected: "<p>Line one<br />Line two</p>",
 		},
 		{
 			Name:     "HTML special chars escaped",
@@ -83,7 +83,7 @@ func TestToHTML(t *testing.T) {
 		{
 			Name:     "single newline and double newline mixed",
 			Input:    "Line one\nLine two\n\nNew paragraph",
-			Expected: "<p>Line one<br>Line two</p><p>New paragraph</p>",
+			Expected: "<p>Line one<br />Line two</p><p>New paragraph</p>",
 		},
 
 		// U+2029 paragraph separator
@@ -144,7 +144,7 @@ func TestToHTML(t *testing.T) {
 		{
 			Name:     "persian with line break",
 			Input:    "درود\nخداحافظ",
-			Expected: "<p>درود<br>خداحافظ</p>",
+			Expected: "<p>درود<br />خداحافظ</p>",
 		},
 
 		// Korean words
@@ -171,7 +171,7 @@ func TestToHTML(t *testing.T) {
 		{
 			Name:     "korean with line break",
 			Input:    "안녕하세요\n감사합니다",
-			Expected: "<p>안녕하세요<br>감사합니다</p>",
+			Expected: "<p>안녕하세요<br />감사합니다</p>",
 		},
 		{
 			Name:     "korean with highlight",
