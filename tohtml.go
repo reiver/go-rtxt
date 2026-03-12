@@ -33,6 +33,7 @@ func ToHTML(s string) string {
 
 		p = strings.ReplaceAll(p, "\n", "<br />")
 		p = strings.ReplaceAll(p, "\u2028", "<br />")
+		p = strings.ReplaceAll(p, "\u0085", "<br />")
 
 		buf.WriteString("<p>")
 		buf.WriteString(p)
