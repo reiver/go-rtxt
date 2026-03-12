@@ -71,6 +71,11 @@ func TestToHTML(t *testing.T) {
 			Expected: "<p>AT&amp;T</p>",
 		},
 		{
+			Name:     "ampersand in words",
+			Input:    "apples & bananas",
+			Expected: "<p>apples &amp; bananas</p>",
+		},
+		{
 			Name:     "three paragraphs",
 			Input:    "One\n\nTwo\n\nThree",
 			Expected: "<p>One</p><p>Two</p><p>Three</p>",
@@ -101,6 +106,11 @@ func TestToHTML(t *testing.T) {
 			Name:     "link with query parameters",
 			Input:    "[[https://example.com/search?q=hello&lang=en]]",
 			Expected: `<p><a href="https://example.com/search?q=hello&amp;lang=en">https://example.com/search?q=hello&amp;lang=en</a></p>`,
+		},
+		{
+			Name:     "link with http and query parameters",
+			Input:    "[[http://example.com/something.php?a=1&bb=22]]",
+			Expected: `<p><a href="http://example.com/something.php?a=1&amp;bb=22">http://example.com/something.php?a=1&amp;bb=22</a></p>`,
 		},
 		{
 			Name:     "bold and link",
