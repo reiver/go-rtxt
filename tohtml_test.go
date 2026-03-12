@@ -86,6 +86,13 @@ func TestToHTML(t *testing.T) {
 			Expected: "<p>Line one<br>Line two</p><p>New paragraph</p>",
 		},
 
+		// U+2029 paragraph separator
+		{
+			Name:     "U+2029 paragraph separator",
+			Input:    "First paragraph\u2029Second paragraph",
+			Expected: "<p>First paragraph</p><p>Second paragraph</p>",
+		},
+
 		// Persian numbers
 		{
 			Name:     "persian digits",

@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	paragraphSplitter = regexp.MustCompile(`\n[ \t\n]*\n`)
+	paragraphSplitter = regexp.MustCompile(`\n[ \t\n]*\n|\x{2029}`)
 
 	boldRegexp      = regexp.MustCompile(`\*\*(.+?)\*\*`)
 	italicRegexp    = regexp.MustCompile(`//(.+?)//`)

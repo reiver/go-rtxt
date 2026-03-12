@@ -8,7 +8,7 @@ It supports the following inline formatting:
 	__underline__  → <u>underline</u>
 	||highlight||  → <mark>highlight</mark>
 
-Paragraphs are separated by blank lines (double newline).
+Paragraphs are separated by blank lines (double newline) or the Unicode paragraph separator (U+2029).
 Single newlines within a paragraph become <br> tags.
 HTML special characters are escaped.
 
