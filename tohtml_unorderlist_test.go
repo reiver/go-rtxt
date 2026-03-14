@@ -224,26 +224,137 @@ func TestToHTML_unorderedList(t *testing.T) {
 
 
 		{
-			Name: "list item with continuation",
-			Input: "\t\u2022 first item\n" +
-				"\tthis continues the first item\n" +
-				"\t\u2022 second item",
-			Expected: "<ul><li>first item<br />this continues the first item</li><li>second item</li></ul>",
+			Name: "(no final newline) unordered list item with continuation",
+			Input:
+				"\t"+ "\u2022 "+ "first item"                    +"\n"+
+				"\t"+            "this continues the first item" +"\n"+
+				"\t"+ "\u2022 "+ "second item"                   +""+
+				"",
+			Expected:
+				`<ul>`+
+					`<li>`+
+						`first item`+
+						`<br />`+
+						`this continues the first item`+
+					`</li>`+
+					`<li>`+
+						`second item`+
+					`</li>`+
+				`</ul>`+
+				"",
 		},
 		{
-			Name: "list with link",
-			Input: "\t\u2022 visit [[https://example.com]]\n" +
-				"\t\u2022 another item",
-			Expected: `<ul><li>visit <a href="https://example.com">https://example.com</a></li><li>another item</li></ul>`,
+			Name: "(yes final newline) unordered list item with continuation",
+			Input:
+				"\t"+ "\u2022 "+ "first item"                    +"\n"+
+				"\t"+            "this continues the first item" +"\n"+
+				"\t"+ "\u2022 "+ "second item"                   +"\n"+
+				"",
+			Expected:
+				`<ul>`+
+					`<li>`+
+						`first item`+
+						`<br />`+
+						`this continues the first item`+
+					`</li>`+
+					`<li>`+
+						`second item`+
+					`</li>`+
+				`</ul>`+
+				"",
+		},
+
+
+
+		{
+			Name: "unordered list with link",
+			Input:
+				"\t"+ "\u2022 " +"visit [[https://example.com]]" +"\n"+
+				"\t"+ "\u2022 " +"another item"                  +""+
+				"",
+			Expected:
+				`<ul>`+
+					`<li>`+
+						`visit <a href="https://example.com">https://example.com</a>`+
+					`</li>`+
+					`<li>`+
+						`another item`+
+					`</li>`+
+				`</ul>`+
+				"",
+		},
+
+
+
+		{
+			Name: "(no final newline) paragraph then list then paragraph",
+			Input:
+				"Here is a list:"         +"\n"+
+				""                        +"\n"+
+				"\t"+ "\u2022 "+ "once"   +"\n"+
+				"\t"+ "\u2022 "+ "twice"  +"\n"+
+				"\t"+ "\u2022 "+ "thrice" +"\n"+
+				"\t"+ "\u2022 "+ "fource" +"\n"+
+				""                        +"\n"+
+				"That was the list."      +""+
+				"",
+			Expected:
+				`<p>`+
+					`Here is a list:`+
+				`</p>`+
+				`<ul>`+
+					`<li>`+
+						`once`+
+					`</li>`+
+					`<li>`+
+						`twice`+
+					`</li>`+
+					`<li>`+
+						`thrice`+
+					`</li>`+
+					`<li>`+
+						`fource`+
+					`</li>`+
+				`</ul>`+
+				`<p>`+
+					`That was the list.`+
+				`</p>`+
+				"",
 		},
 		{
-			Name: "paragraph then list then paragraph",
-			Input: "Here is a list:\n\n" +
-				"\t\u2022 one\n" +
-				"\t\u2022 two\n" +
-				"\t\u2022 three\n\n" +
-				"That was the list.",
-			Expected: "<p>Here is a list:</p><ul><li>one</li><li>two</li><li>three</li></ul><p>That was the list.</p>",
+			Name: "(yes final newline) paragraph then list then paragraph",
+			Input:
+				"Here is a list:"         +"\n"+
+				""                        +"\n"+
+				"\t"+ "\u2022 "+ "once"   +"\n"+
+				"\t"+ "\u2022 "+ "twice"  +"\n"+
+				"\t"+ "\u2022 "+ "thrice" +"\n"+
+				"\t"+ "\u2022 "+ "fource" +"\n"+
+				""                        +"\n"+
+				"That was the list."      +"\n"+
+				"",
+			Expected:
+				`<p>`+
+					`Here is a list:`+
+				`</p>`+
+				`<ul>`+
+					`<li>`+
+						`once`+
+					`</li>`+
+					`<li>`+
+						`twice`+
+					`</li>`+
+					`<li>`+
+						`thrice`+
+					`</li>`+
+					`<li>`+
+						`fource`+
+					`</li>`+
+				`</ul>`+
+				`<p>`+
+					`That was the list.`+
+				`</p>`+
+				"",
 		},
 	}
 
