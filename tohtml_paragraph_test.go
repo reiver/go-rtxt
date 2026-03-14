@@ -37,7 +37,7 @@ func TestToHTML_paragraph(t *testing.T) {
 			Name: "(no final newlie) one paragraph with two sentences.",
 			Input:
 				`Hello world!` +"\n"+
-				`How do //you/ do?` +""+
+				`How do //you// do?` +""+
 				"",
 			Expected:
 				`<p>`+
