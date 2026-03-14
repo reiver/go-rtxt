@@ -83,6 +83,10 @@ func ToHTML(s string) string {
 
 	var buf strings.Builder
 	for _, p := range paragraphs {
+		p = strings.TrimRight(p, "\n")
+		if "" == p {
+			continue
+		}
 		if isListBlock(p) {
 			renderList(p, &buf)
 		} else {
