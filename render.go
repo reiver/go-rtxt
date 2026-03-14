@@ -64,13 +64,13 @@ func renderMarkedSubLineToHTML(p []byte, subline string, marker string, openedHT
 	return p
 }
 
-// markedIndexes return the indexes of the opening-marker and the ending-marker in a line.
+// markerIndexes return the indexes of the opening-marker and the ending-marker in a line.
 //
 // So, for example, if the `marker` was "**" and the line was:
 //
 //	"apple **banana** cherry"
 //
-// Then the markedIndexes would return:
+// Then the markerIndexes would return:
 //
 //	opened == 6
 //	closed == 14
@@ -83,7 +83,7 @@ func renderMarkedSubLineToHTML(p []byte, subline string, marker string, openedHT
 //	       🠙       🠙
 //
 // If both the opening-marker or the closing-marker doesn't
-// exist in `line`, then markedIndexes returns:
+// exist in `line`, then markerIndexes returns:
 //
 //	opened == -1
 //	closed == -1
@@ -91,15 +91,16 @@ func renderMarkedSubLineToHTML(p []byte, subline string, marker string, openedHT
 // Note that this function assumes it has a line.
 // I.e., that there are no EOL (end-of-line) characters in it.
 // It will not itself check if there are EOL (end-of-line)
-// characters in `line`.
-func markedIndexes(line string, marker string) (opened int, closed int) {
-	opened = strings.Index(line, marker)
+// characters in `line`. This matters because marked-text is
+// NOT supposed to span multiple lines.
+func markerIndexes(line string, openingMarker string, closingMarker string) (opened int, closed int) {
+	opened = strings.Index(line, openingMarker)
 	if opened < 0 {
 		return -1, -1
 	}
 
-	var skip int = opened + len(marker)
-	closed = strings.Index(line[skip:], marker)
+	var skip int = opened + len(openingMarker)
+	closed = strings.Index(line[skip:], closingMarker)
 	if closed < 0 {
 		return -1, -1
 	}
