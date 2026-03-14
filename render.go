@@ -35,6 +35,35 @@ func renderRunesToHTML(p []byte, runes string) []byte {
 	return p
 }
 
+// renderMarkedSubLineToHTML expected to have the `marker` at the begining and the ending of the `subline`.
+// So, for example, if the `marker` was "**", then it would expect:
+//
+//	"**banana**"
+//
+// If that is not the case (that the marker is at the beginning and end of the `subline`) then
+// renderMarkedSubLineToHTML just acts like [renderRunesToHTML].
+//
+// However, if the marker is indeed at the beginning and end of the `subline`, then it renders to HTML.
+// So, continuing our example, we would get:
+//
+//	"<strong>banana</strong>"
+func renderMarkedSubLineToHTML(p []byte, subline string, marker string, openedHTML string, closedHTML string) []byte {
+	if !strings.HasPrefix(subline, marker) || !strings.HasSuffix(subline, marker) {
+		return renderRunesToHTML(p, subline)
+	}
+	if len(subline) < len(marker) {
+		return renderRunesToHTML(p, subline)
+	}
+
+	inner := subline[len(marker):len(subline)-len(marker)]
+
+	p = append(p, openedHTML...)
+	p = renderRunesToHTML(p, inner)
+	p = append(p, closedHTML...)
+
+	return p
+}
+
 // markedIndexes return the indexes of the opening-marker and the ending-marker in a line.
 //
 // So, for example, if the `marker` was "**" and the line was:
