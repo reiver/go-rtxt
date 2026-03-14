@@ -228,7 +228,10 @@ func TestToHTML_unorderedList(t *testing.T) {
 			Input:
 				"\t"+ "\u2022 "+ "first item"                    +"\n"+
 				"\t"+            "this continues the first item" +"\n"+
-				"\t"+ "\u2022 "+ "second item"                   +""+
+				"\t"+ "\u2022 "+ "second item"                   +"\n"+
+				"\t"+ "\u2022 "+ "third item"                    +"\n"+
+				"\t"+            "to be"                         +"\n"+
+				"\t"+            "continued"                     +""+
 				"",
 			Expected:
 				`<ul>`+
@@ -239,6 +242,13 @@ func TestToHTML_unorderedList(t *testing.T) {
 					`</li>`+
 					`<li>`+
 						`second item`+
+					`</li>`+
+					`<li>`+
+						`third item`+
+						`<br />`+
+						`to be`+
+						`<br />`+
+						`continued`+
 					`</li>`+
 				`</ul>`+
 				"",
@@ -249,6 +259,9 @@ func TestToHTML_unorderedList(t *testing.T) {
 				"\t"+ "\u2022 "+ "first item"                    +"\n"+
 				"\t"+            "this continues the first item" +"\n"+
 				"\t"+ "\u2022 "+ "second item"                   +"\n"+
+				"\t"+ "\u2022 "+ "third item"                    +"\n"+
+				"\t"+            "to be"                         +"\n"+
+				"\t"+            "continued"                     +"\n"+
 				"",
 			Expected:
 				`<ul>`+
@@ -259,6 +272,13 @@ func TestToHTML_unorderedList(t *testing.T) {
 					`</li>`+
 					`<li>`+
 						`second item`+
+					`</li>`+
+					`<li>`+
+						`third item`+
+						`<br />`+
+						`to be`+
+						`<br />`+
+						`continued`+
 					`</li>`+
 				`</ul>`+
 				"",
