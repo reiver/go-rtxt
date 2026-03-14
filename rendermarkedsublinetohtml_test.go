@@ -6,19 +6,21 @@ import (
 
 func TestRenderMarkedSubLineToHTML(t *testing.T) {
 	tests := []struct {
-		Name       string
-		SubLine    string
-		Marker     string
-		OpenedHTML string
-		ClosedHTML string
-		Initial    []byte
-		Expected   string
+		Name          string
+		SubLine       string
+		OpeningMarker string
+		ClosingMarker string
+		OpenedHTML    string
+		ClosedHTML    string
+		Initial       []byte
+		Expected      string
 	}{
 		// Bold
 		{
 			Name:       "bold",
 			SubLine:    "**banana**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "<strong>banana</strong>",
@@ -28,7 +30,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "italic",
 			SubLine:    "//banana//",
-			Marker:     "//",
+			OpeningMarker: "//",
+			ClosingMarker: "//",
 			OpenedHTML: "<em>",
 			ClosedHTML: "</em>",
 			Expected:   "<em>banana</em>",
@@ -38,7 +41,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "underline",
 			SubLine:    "__banana__",
-			Marker:     "__",
+			OpeningMarker: "__",
+			ClosingMarker: "__",
 			OpenedHTML: "<u>",
 			ClosedHTML: "</u>",
 			Expected:   "<u>banana</u>",
@@ -48,7 +52,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "highlight",
 			SubLine:    "||banana||",
-			Marker:     "||",
+			OpeningMarker: "||",
+			ClosingMarker: "||",
 			OpenedHTML: "<mark>",
 			ClosedHTML: "</mark>",
 			Expected:   "<mark>banana</mark>",
@@ -58,7 +63,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "no markers falls back to plain rendering",
 			SubLine:    "banana",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "banana",
@@ -68,7 +74,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "only opening marker falls back",
 			SubLine:    "**banana",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "**banana",
@@ -78,7 +85,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "only closing marker falls back",
 			SubLine:    "banana**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "banana**",
@@ -88,7 +96,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "html escaping inside bold",
 			SubLine:    "**<b>**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "<strong>&lt;b&gt;</strong>",
@@ -96,7 +105,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "ampersand inside bold",
 			SubLine:    "**AT&T**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "<strong>AT&amp;T</strong>",
@@ -106,7 +116,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "html escaping in fallback",
 			SubLine:    "AT&T",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "AT&amp;T",
@@ -116,7 +127,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "empty content between markers",
 			SubLine:    "****",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "<strong></strong>",
@@ -126,7 +138,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "persian text in bold",
 			SubLine:    "**دوست**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Expected:   "<strong>دوست</strong>",
@@ -134,7 +147,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "korean text in italic",
 			SubLine:    "//굵은//",
-			Marker:     "//",
+			OpeningMarker: "//",
+			ClosingMarker: "//",
 			OpenedHTML: "<em>",
 			ClosedHTML: "</em>",
 			Expected:   "<em>굵은</em>",
@@ -144,7 +158,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "append bold to existing buffer",
 			SubLine:    "**banana**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Initial:    []byte("hello "),
@@ -153,7 +168,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "append fallback to existing buffer",
 			SubLine:    "banana",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Initial:    []byte("hello "),
@@ -164,7 +180,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "only opened marker",
 			SubLine:    "**once & twice & thrice & fource",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Initial:    []byte("hello "),
@@ -173,7 +190,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 		{
 			Name:       "only closed marker",
 			SubLine:    "once & twice & thrice & fource**",
-			Marker:     "**",
+			OpeningMarker: "**",
+			ClosingMarker: "**",
 			OpenedHTML: "<strong>",
 			ClosedHTML: "</strong>",
 			Initial:    []byte("hello "),
@@ -183,7 +201,7 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 
 	for testNumber, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
-			actual := string(renderMarkedSubLineToHTML(test.Initial, test.SubLine, test.Marker, test.OpenedHTML, test.ClosedHTML))
+			actual := string(renderMarkedSubLineToHTML(test.Initial, test.SubLine, test.OpeningMarker, test.ClosingMarker, test.OpenedHTML, test.ClosedHTML))
 
 			expected := test.Expected
 
@@ -192,7 +210,8 @@ func TestRenderMarkedSubLineToHTML(t *testing.T) {
 				t.Logf("EXPECTED: %q", expected)
 				t.Logf("ACTUAL:   %q", actual)
 				t.Logf("SUBLINE:  %q", test.SubLine)
-				t.Logf("MARKER:   %q", test.Marker)
+				t.Logf("OPENING MARKER: %q", test.OpeningMarker)
+				t.Logf("CLOSING MARKER: %q", test.ClosingMarker)
 				return
 			}
 		})
