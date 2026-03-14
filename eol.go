@@ -38,6 +38,9 @@ import (
 // Would yield an `index` of 6, and a `length of 3.
 // (The length is 3 here because U+2028 take up 3 bytes in its UTF-8 encoding: 0xE2 0x80 0xA8.)
 func eolIndex(source string) (index int, length int) {
+
+//@TODO: this could probably be made more performant if it did a single pass through the `source` rather than multiple.
+
 	index = -1
 
 	// This check for "\r\n" MUSt come before the check for "\n".
