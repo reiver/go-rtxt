@@ -6,170 +6,206 @@ import (
 
 func TestEOLIndex(t *testing.T) {
 	tests := []struct{
-		String string
-		Expected int
+		String         string
+		ExpectedIndex  int
+		ExpectedLength int
 	}{
 		{
 			String: "",
-			Expected: 0,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 
 
 
 		{
 			String: "e",
-			Expected: 1,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "ex",
-			Expected: 2,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "exa",
-			Expected: 3,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "exam",
-			Expected: 4,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "examp",
-			Expected: 5,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "exampl",
-			Expected: 6,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example",
-			Expected: 7,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example ",
-			Expected: 8,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example l",
-			Expected: 9,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example li",
-			Expected: 10,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example lin",
-			Expected: 11,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line",
-			Expected: 12,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line ",
-			Expected: 13,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line w",
-			Expected: 14,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line wi",
-			Expected: 15,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line wit",
-			Expected: 16,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with",
-			Expected: 17,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with ",
-			Expected: 18,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with n",
-			Expected: 19,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with no",
-			Expected: 20,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with no ",
-			Expected: 21,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with no e",
-			Expected: 22,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with no eo",
-			Expected: 23,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 		{
 			String: "example line with no eol",
-			Expected: 24,
+			ExpectedIndex: -1,
+			ExpectedLength: 0,
 		},
 
 
 
 		{
 			String: "example line\r\n",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 2,
 		},
 		{
 			String: "example line\n",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 1,
 		},
 		{
 			String: "example line\u0085",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 2,
 		},
 		{
 			String: "example line\u2028",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 3,
 		},
 		{
 			String: "example line\u2029",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 3,
 		},
 
 
 
 		{
 			String: "example line\r\nline two",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 2,
 		},
 		{
 			String: "example line\nline two",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 1,
 		},
 		{
 			String: "example line\u0085line two",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 2,
 		},
 		{
 			String: "example line\u2028line two",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 3,
 		},
 		{
 			String: "example line\u2029line two",
-			Expected: 12,
+			ExpectedIndex: 12,
+			ExpectedLength: 3,
 		},
 	}
 
 	for testNumber, test := range tests {
 
-		actual := eolIndex(test.String)
+		actualIndex, actualLength := eolIndex(test.String)
 
-		expected := test.Expected
-
-		if expected != actual {
+		if test.ExpectedIndex != actualIndex || test.ExpectedLength != actualLength {
 			t.Errorf("For test #%d, the actual EOL-index is not what was expected.", testNumber)
-			t.Logf("EXPECTED: %d", expected)
-			t.Logf("ACTUAL:   %d", actual)
+			t.Logf("EXPECTED INDEX:  %d", test.ExpectedIndex)
+			t.Logf("ACTUAL   INDEX:  %d", actualIndex)
+			t.Logf("EXPECTED LENGTH: %d", test.ExpectedLength)
+			t.Logf("ACTUAL   LENGTH: %d", actualLength)
 			t.Logf("STRING: %q", test.String)
 			continue
 		}
