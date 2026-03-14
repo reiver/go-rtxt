@@ -213,6 +213,74 @@ func renderLineToHTML(p []byte, line string) []byte {
 
 	// Render what is after the marked part.
 	line = line[len(subline):]
-//@TODO: Will this blow the stack of very large text?
+//@TODO: Will this blow the stack if the text is very large?
 	return renderLineToHTML(p, line)
+}
+
+// renderLinesToHTML render (potentially) multiple lines in a block to HTML.
+// A block may be the lines of a paragraph, or could be the lines of an item
+// in an unordered list, etc.
+//
+// If the block was:
+//
+//	"Hello!"                 +"\n"+
+//	"How //do// **you** do?" +"\n"+
+//
+// Then that would (logically) be rendered to:
+//
+//	"Hello!"                                   +"\n"+
+//	"How <em>do</em> <strong>you</strong> do?" +"\n"+
+//
+// Or, if the block was:
+//
+//	"Hello!"                 +"\r\n"+
+//	"How //do// **you** do?" +"\r\n"+
+//
+// Then that would (logically) be rendered to:
+//
+//	"Hello!"                                   +"\n"+
+//	"How <em>do</em> <strong>you</strong> do?" +"\n"+
+//
+// Also, if the block was:
+//
+//	"Hello!"                 +"\u2028"+
+//	"How //do// **you** do?" +"\u2028"+
+//
+// Then that would (logically) be rendered to:
+//
+//	"Hello!"                                   +"\n"+
+//	"How <em>do</em> <strong>you</strong> do?" +"\n"+
+func renderBlockToHTML(p []byte, lines string) []byte {
+
+	for {
+		eolindex, eol := eolIndex(lines)
+		if eolindex < 0 {
+			return renderLineToHTML(p, lines)
+		}
+		if 0 == eolindex && "" == eol {
+			// This should never happen.
+			return renderRunesToHTML(p, lines)
+		}
+
+		line := lines[:eolindex]
+		p = renderLineToHTML(p, line)
+
+		skip := eolindex + len(eol)
+		lines = lines[skip:]
+
+		if len(lines) <= 0 {
+			break
+		}
+
+		switch eol {
+		case ls:
+			p = append(p, "\n<br />\n"...)
+		case "":
+			// nothing here.
+		default:
+			p = append(p, '\n')
+		}
+	}
+
+	return p
 }
