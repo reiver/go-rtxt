@@ -284,3 +284,38 @@ func renderBlockToHTML(p []byte, lines string) []byte {
 
 	return p
 }
+
+func AppendRenderedHTML(p []byte, source string) []byte {
+	eobindex, eob := eobIndex(source)
+	if eobindex < 0 {
+		return renderBlockToHTML(p, source)
+	}
+
+	for {
+		eobindex, eob = eobIndex(source)
+		if eobindex < 0 {
+			p = append(p, "<p>\n"...)
+			p = renderBlockToHTML(p, source)
+			p = append(p, "\n</p>\n"...)
+			break
+		}
+		if 0 == eobindex && "" == eob {
+			// This should never happen.
+			return renderBlockToHTML(p, source)
+		}
+
+		block := source[:eobindex]
+		p = append(p, "<p>\n"...)
+		p = renderBlockToHTML(p, block)
+		p = append(p, "\n</p>\n"...)
+
+		skip := eobindex + len(eob)
+		source = source[skip:]
+
+		if len(source) <= 0 {
+			break
+		}
+	}
+
+	return p
+}
