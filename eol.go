@@ -51,7 +51,7 @@ func eolIndex(source string) (index int, eol string) {
 
 	index = -1
 
-	// This check for "\r\n" MUSt come before the check for "\n".
+	// This check for "\r\n" MUST come before the check for "\n".
 	// Since "\n" is within "\r\n".
 	i := strings.Index(source, crlf) // Carriage Return, Line Feed
 	if index < 0 || (0 <= i && i < index) {
